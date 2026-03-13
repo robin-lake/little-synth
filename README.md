@@ -1,6 +1,7 @@
 # little-synth
 
-A live-oriented synthesizer firmware for **Teensy 4.1** in Rust: waveform oscillators, effects, ADSR, LFOs, MIDI I/O, and a display interface. Designed for use with the **Arturia Keystep Pro** and **PCM5102** I2S DAC.
+A live-oriented synthesizer firmware for **Teensy 4.1** in Rust.  
+**For architecture, module boundaries, and diagrams, see [ARCHITECTURE.md](ARCHITECTURE.md)** (single source of truth; LLM-friendly).: waveform oscillators, effects, ADSR, LFOs, MIDI I/O, and a display interface. Designed for use with the **Arturia Keystep Pro** and **PCM5102** I2S DAC.
 
 ## Features
 
