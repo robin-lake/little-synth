@@ -1,0 +1,15 @@
+[package]
+name = "little-synth-firmware"
+version = "0.1.0"
+edition = "2021"
+description = "Teensy 4.1 firmware for little-synth: I2S DAC, MIDI UART, display interface"
+
+[dependencies]
+little-synth = { path = "../synth" }
+teensy4-bsp = { version = "0.5", features = ["rt"] }
+cortex-m = "0.7"
+cortex-m-rt = "0.7"
+# imxrt-hal is re-exported by teensy4-bsp for SAI/I2S when we add it
+
+[build-dependencies]
+imxrt-rt = { version = "0.1", features = ["device"] }

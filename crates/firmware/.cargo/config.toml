@@ -1,0 +1,8 @@
+# Build for Teensy 4.1 (ARM Cortex-M7, NXP i.MX RT1062)
+[build]
+target = "thumbv7em-none-eabihf"
+
+[target.thumbv7em-none-eabihf]
+# Use LLVM objcopy for generating .hex (install: cargo install cargo-binutils)
+# Then: cargo objcopy --release -- -O ihex little-synth-firmware.hex
+runner = "teensy_loader_cli -w -v"

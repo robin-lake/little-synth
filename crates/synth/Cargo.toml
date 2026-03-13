@@ -1,0 +1,35 @@
+[package]
+name = "little-synth"
+version = "0.1.0"
+edition = "2021"
+description = "DSP and synth logic for little-synth (no_std, testable on host)"
+license = "MIT OR Apache-2.0"
+
+[features]
+default = []
+# Enable for host-side tests that need std (e.g. extra assertions)
+std = []
+
+[dependencies]
+# Float math in no_std (sin, tanh, etc.)
+libm = "0.2"
+
+[dev-dependencies]
+# For property tests, rounding tests, etc.
+# proptest = { version = "1", optional = true }
+
+[[test]]
+name = "oscillator"
+path = "tests/oscillator.rs"
+
+[[test]]
+name = "envelope"
+path = "tests/envelope.rs"
+
+[[test]]
+name = "lfo"
+path = "tests/lfo.rs"
+
+[[test]]
+name = "midi"
+path = "tests/midi.rs"
