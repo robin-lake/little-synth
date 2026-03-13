@@ -258,6 +258,16 @@ sequenceDiagram
 | MIDI IN | UART 31250 baud | One LPUART RX pin | Optocoupler/level shift per MIDI spec |
 | MIDI OUT | UART 31250 baud | One LPUART TX pin | Driver circuit to Keystep MIDI IN |
 | Display | SPI or I2C (TBD) | Implement `Display` trait | Not wired in main yet |
+| **Controller** | **Controller trait** | **Brkbx / Keystep Pro / other** | See §6.1 |
+
+### 6.1 Controller HAL (little-synth-controller)
+
+Input can come from custom hardware (brkbx-style) or from MIDI (e.g. Arturia Keystep Pro). The [`Controller`] trait in `little-synth-controller` abstracts this:
+
+- **`Controller::poll()`** → `ControllerState` (keys, knobs, sliders, joysticks, rotary deltas, buttons).
+- **`Controller::set_leds()`** → drive LED outputs (e.g. SLOW, FLIP, HOLD, PLAY).
+
+**Brkbx pinout** (matches [brkbx control.py](https://github.com/allieum/brkbx/blob/main/src/control.py)): key matrix rows 1–4, cols 0/9–12; knobs A0–A3 (pins 14–17); faders A12, A13, 38, 39; joysticks (24,25,30) and (40,41,35); LEDs 5,6,22,23; rotary encoders (31,32,36) and (33,34,37). Firmware provides a stub driver (`brkbx_teensy41::BrkbxStub`) and pinout docs; replace with a real `BrkbxHardware` impl that owns the board’s pins/ADC to read the hardware.
 
 ---
 
@@ -286,7 +296,7 @@ Quick path reference for humans and LLMs.
 
 ```
 little-synth/
-├── Cargo.toml                    # Workspace: members = ["crates/synth", "crates/firmware"]
+├── Cargo.toml                    # Workspace: members = ["crates/synth", "crates/controller", "crates/firmware"]
 ├── ARCHITECTURE.md               # This document
 ├── README.md
 │
@@ -308,13 +318,14 @@ little-synth/
 │   │       └── lfo.rs
 │   │
 │   └── firmware/
-│       ├── Cargo.toml            # Deps: little-synth, teensy4-bsp (rt), cortex-m, cortex-m-rt
+│       ├── Cargo.toml            # Deps: little-synth, little-synth-controller (brkbx), teensy4-bsp
 │       ├── build.rs              # imxrt_rt RuntimeBuilder for T41
 │       ├── .cargo/config.toml    # target = thumbv7em-none-eabihf, runner
 │       └── src/
 │           ├── main.rs           # Entry, panic, init_audio, DummyDisplay, loop
-│           ├── lib.rs            # Pub: audio, display, midi_uart
+│           ├── lib.rs            # Pub: audio, display, midi_uart, brkbx_teensy41
 │           ├── audio.rs          # init_audio(), BoardResources, SAMPLE_RATE_HZ, BLOCK_SIZE
+│           ├── brkbx_teensy41.rs  # BrkbxStub (BrkbxHardware), pinout doc for T41
 │           ├── midi_uart.rs     # parse_midi_byte(), MIDI_BAUD
 │           └── display.rs        # Display trait, Rect, PixelFormat, DummyDisplay
 ```

@@ -1,0 +1,12 @@
+[package]
+name = "little-synth-controller"
+version = "0.1.0"
+edition = "2021"
+description = "Hardware abstraction for synth controllers: brkbx (key matrix, knobs, sliders, joysticks), swappable with MIDI (e.g. Keystep Pro)"
+
+[features]
+default = []
+# Brkbx breakbox-style hardware (key matrix, knobs, faders, joysticks, rotary)
+brkbx = []
+
+[dependencies]

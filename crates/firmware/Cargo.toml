@@ -6,6 +6,7 @@ description = "Teensy 4.1 firmware for little-synth: I2S DAC, MIDI UART, display
 
 [dependencies]
 little-synth = { path = "../synth" }
+little-synth-controller = { path = "../controller", features = ["brkbx"] }
 teensy4-bsp = { version = "0.5", features = ["rt"] }
 cortex-m = "0.7"
 cortex-m-rt = "0.7"

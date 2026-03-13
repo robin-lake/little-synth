@@ -267,6 +267,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "little-synth-controller"
+version = "0.1.0"
+
+[[package]]
 name = "little-synth-firmware"
 version = "0.1.0"
 dependencies = [
@@ -274,6 +278,7 @@ dependencies = [
  "cortex-m-rt",
  "imxrt-rt",
  "little-synth",
+ "little-synth-controller",
  "teensy4-bsp",
 ]
 
