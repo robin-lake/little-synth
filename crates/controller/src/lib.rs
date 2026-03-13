@@ -4,7 +4,7 @@
 //! knobs, sliders, joysticks) and other controllers (e.g. Arturia Keystep Pro over MIDI)
 //! by implementing the [`Controller`] trait.
 
-#![no_std]
+#![cfg_attr(not(feature = "key_log_std"), no_std)]
 
 mod state;
 
@@ -26,3 +26,6 @@ pub trait Controller {
 
 #[cfg(feature = "brkbx")]
 pub mod brkbx;
+
+#[cfg(all(feature = "brkbx", feature = "key_log_std"))]
+pub mod std_key_log;

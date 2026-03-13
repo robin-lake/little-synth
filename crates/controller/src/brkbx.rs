@@ -21,8 +21,28 @@
 //! | Rotary 1 button | D36                  | Input, pull-up (inverted)|
 //! | Rotary 2 (BPM)  | D33 (CLK), D34 (DT)  | Encoder                  |
 //! | Rotary 2 button | D37                  | Input, pull-up (inverted)|
+//!
+//! ## Key press logging
+//!
+//! To log every key press/release, use [`BrkbxHal::new_with_key_log`] and pass a type that
+//! implements [`KeyPressLog`]. With the `key_log_std` feature you can use [`StdKeyLog`]
+//! (from the `std_key_log` module) configured for terminal (stdout) or a file.
 
 use crate::{key_index, Controller, ControllerState, JoystickState, LedsState, KEY_COLS, KEY_COUNT, KEY_ROWS};
+
+/// Sink for key press/release events. Implement to log to terminal, file, UART, etc.
+pub trait KeyPressLog {
+    /// Called once per key state change (press or release). `row` and `col` are matrix indices; `pressed` is true on press, false on release.
+    fn log_key(&mut self, row: u8, col: u8, pressed: bool);
+}
+
+/// No-op logger; use as default when key logging is disabled.
+#[derive(Default)]
+pub struct NoOpKeyLog;
+
+impl KeyPressLog for NoOpKeyLog {
+    fn log_key(&mut self, _row: u8, _col: u8, _pressed: bool) {}
+}
 
 /// Low-level hardware access for brkbx pinout.
 ///
@@ -72,17 +92,36 @@ pub mod adc_channels {
 const ADC_MAX: u16 = 65535;
 
 /// Brkbx hardware abstraction: implements [`Controller`] by polling [`BrkbxHardware`].
-pub struct BrkbxHal<H> {
+/// `L` is the key press logger (default [`NoOpKeyLog`]); use a real logger to log key events to terminal or file.
+pub struct BrkbxHal<H, L = NoOpKeyLog> {
     hardware: H,
+    key_log: L,
+    prev_keys: [bool; KEY_COUNT],
 }
 
-impl<H> BrkbxHal<H> {
+impl<H> BrkbxHal<H, NoOpKeyLog> {
+    /// Create HAL with no key logging.
     pub const fn new(hardware: H) -> Self {
-        Self { hardware }
+        Self {
+            hardware,
+            key_log: NoOpKeyLog,
+            prev_keys: [false; KEY_COUNT],
+        }
     }
 }
 
-impl<H: BrkbxHardware> Controller for BrkbxHal<H> {
+impl<H, L: KeyPressLog> BrkbxHal<H, L> {
+    /// Create HAL with key press logging (e.g. to terminal or file).
+    pub const fn new_with_key_log(hardware: H, key_log: L) -> Self {
+        Self {
+            hardware,
+            key_log,
+            prev_keys: [false; KEY_COUNT],
+        }
+    }
+}
+
+impl<H: BrkbxHardware, L: KeyPressLog> Controller for BrkbxHal<H, L> {
     fn poll(&mut self) -> ControllerState {
         use adc_channels::*;
 
@@ -93,6 +132,17 @@ impl<H: BrkbxHardware> Controller for BrkbxHal<H> {
         for row in 0u8..KEY_ROWS as u8 {
             for col in 0u8..KEY_COLS as u8 {
                 keys[key_index(row, col) as usize] = h.read_key(row, col);
+            }
+        }
+
+        // Log key press/release changes
+        for row in 0u8..KEY_ROWS as u8 {
+            for col in 0u8..KEY_COLS as u8 {
+                let idx = key_index(row, col) as usize;
+                if keys[idx] != self.prev_keys[idx] {
+                    self.key_log.log_key(row, col, keys[idx]);
+                    self.prev_keys[idx] = keys[idx];
+                }
             }
         }
 

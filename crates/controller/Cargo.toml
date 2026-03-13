@@ -8,5 +8,7 @@ description = "Hardware abstraction for synth controllers: brkbx (key matrix, kn
 default = []
 # Brkbx breakbox-style hardware (key matrix, knobs, faders, joysticks, rotary)
 brkbx = []
+# Enable std and key logging to terminal or file (for host/simulator use)
+key_log_std = []
 
 [dependencies]
