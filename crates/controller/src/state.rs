@@ -1,34 +1,26 @@
-//! Controller state and key indices matching brkbx layout.
+//! Controller state and key matrix layout.
 //!
-//! Key matrix is 4 rows × 5 cols = 20 keys. Indices match brkbx `control.py`:
-//! SAMPLE_KEYS 0–7, LATCH_KEYS 8–11, GATE_KEYS 12–15, function keys 16–19.
+//! Key matrix is 4 rows × 5 cols = 20 buttons, indexable by (row, col) or by flat index.
+//! Storage is row-major: index = row * KEY_COLS + col.
 
-/// Index into the 20-key matrix (4×5).
+/// Index into the key matrix (0..KEY_COUNT). Row-major: row * KEY_COLS + col.
 pub type KeyIndex = u8;
 
-/// Sample pad keys (indices 0–7).
-pub const SAMPLE_KEYS: core::ops::Range<KeyIndex> = 0..8;
+/// Number of key matrix rows.
+pub const KEY_ROWS: usize = 4;
 
-/// Latch keys (indices 8–11).
-pub const LATCH_KEYS: core::ops::Range<KeyIndex> = 8..12;
+/// Number of key matrix columns.
+pub const KEY_COLS: usize = 5;
 
-/// Gate keys (indices 12–15).
-pub const GATE_KEYS: core::ops::Range<KeyIndex> = 12..16;
+/// Number of keys in the matrix (KEY_ROWS * KEY_COLS).
+pub const KEY_COUNT: usize = KEY_ROWS * KEY_COLS;
 
-/// All sound-related keys (0–15).
-pub const SOUND_KEYS: core::ops::Range<KeyIndex> = 0..16;
-
-/// Keys that can be held (0–17).
-pub const HOLDABLE_KEYS: core::ops::Range<KeyIndex> = 0..18;
-
-/// Function keys (brkbx: SLOW, FLIP, HOLD, PLAY).
-pub const SLOW_KEY: KeyIndex = 16;
-pub const FLIP_KEY: KeyIndex = 17;
-pub const HOLD_KEY: KeyIndex = 18;
-pub const PLAY_KEY: KeyIndex = 19;
-
-/// Number of keys in the matrix.
-pub const KEY_COUNT: usize = 20;
+/// Flat index for the button at (row, col). Panics if row >= KEY_ROWS or col >= KEY_COLS.
+#[inline]
+pub fn key_index(row: u8, col: u8) -> KeyIndex {
+    assert!(row < KEY_ROWS as u8 && col < KEY_COLS as u8);
+    (row as KeyIndex) * KEY_COLS as KeyIndex + col
+}
 
 /// Joystick position: x, y in [-1.0, 1.0]; button pressed.
 #[derive(Clone, Copy, Debug, Default)]
@@ -50,7 +42,7 @@ pub struct LedsState {
 /// Full controller state from one poll.
 #[derive(Clone, Debug)]
 pub struct ControllerState {
-    /// Key matrix: key down (true) or up (false). Index 0..20.
+    /// Key matrix: key down (true) or up (false). Row-major: index = row * KEY_COLS + col.
     pub keys: [bool; KEY_COUNT],
 
     /// Four knobs in [0.0, 1.0] (or app-specific ranges).
@@ -76,6 +68,14 @@ pub struct ControllerState {
 
     /// Rotary 2 button pressed.
     pub rotary2_button: bool,
+}
+
+impl ControllerState {
+    /// True if the button at (row, col) is pressed.
+    #[inline]
+    pub fn key_at(&self, row: u8, col: u8) -> bool {
+        self.keys[key_index(row, col) as usize]
+    }
 }
 
 impl Default for ControllerState {

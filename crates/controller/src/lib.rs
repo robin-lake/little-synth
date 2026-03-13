@@ -9,9 +9,8 @@
 mod state;
 
 pub use state::{
-    ControllerState, JoystickState, LedsState, KeyIndex, KEY_COUNT,
-    SLOW_KEY, FLIP_KEY, HOLD_KEY, PLAY_KEY,
-    SAMPLE_KEYS, LATCH_KEYS, GATE_KEYS, SOUND_KEYS, HOLDABLE_KEYS,
+    ControllerState, JoystickState, LedsState, KeyIndex, KEY_COLS, KEY_COUNT, KEY_ROWS,
+    key_index,
 };
 
 /// Controller input abstraction: poll current state and drive LEDs.

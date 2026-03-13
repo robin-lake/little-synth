@@ -1,0 +1,3 @@
+cargo:rustc-link-search=/Users/robinlake/code/little-synth/target/thumbv7em-none-eabihf/release/build/imxrt-ral-feefe926866ed9c7/out
+cargo:rerun-if-changed=src/imxrt1062.x
+cargo:rerun-if-changed=build.rs

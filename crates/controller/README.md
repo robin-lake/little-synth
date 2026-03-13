@@ -21,7 +21,7 @@ let state = hal.poll();
 hal.set_leds(LedsState { slow: false, flip: true, hold: false, play: true });
 ```
 
-Key indices match brkbx: `SAMPLE_KEYS` 0–7, `LATCH_KEYS` 8–11, `GATE_KEYS` 12–15, `SLOW_KEY` 16, `FLIP_KEY` 17, `HOLD_KEY` 18, `PLAY_KEY` 19.
+The key matrix is 4 rows × 5 columns (20 buttons). Use `key_index(row, col)` for the flat index (row-major), or index `state.keys` directly. Check a button with `state.key_at(row, col)`.
 
 ## Brkbx pinout
 

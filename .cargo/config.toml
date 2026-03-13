@@ -1,0 +1,4 @@
+# When building from workspace root, Cargo does NOT read crates/firmware/.cargo/config.toml.
+# So we must set the Teensy linker script here for the firmware target.
+[target.thumbv7em-none-eabihf]
+rustflags = ["-C", "link-arg=-Tt4link.x"]

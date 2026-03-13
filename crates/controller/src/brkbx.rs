@@ -22,7 +22,7 @@
 //! | Rotary 2 (BPM)  | D33 (CLK), D34 (DT)  | Encoder                  |
 //! | Rotary 2 button | D37                  | Input, pull-up (inverted)|
 
-use crate::{Controller, ControllerState, JoystickState, LedsState, KEY_COUNT};
+use crate::{key_index, Controller, ControllerState, JoystickState, LedsState, KEY_COLS, KEY_COUNT, KEY_ROWS};
 
 /// Low-level hardware access for brkbx pinout.
 ///
@@ -88,14 +88,11 @@ impl<H: BrkbxHardware> Controller for BrkbxHal<H> {
 
         let h = &mut self.hardware;
 
-        // Key matrix: 4 rows × 5 cols
+        // Key matrix: row × col, stored row-major
         let mut keys = [false; KEY_COUNT];
-        for row in 0u8..4 {
-            for col in 0u8..5 {
-                let idx = (row as usize) * 5 + (col as usize);
-                if idx < KEY_COUNT {
-                    keys[idx] = h.read_key(row, col);
-                }
+        for row in 0u8..KEY_ROWS as u8 {
+            for col in 0u8..KEY_COLS as u8 {
+                keys[key_index(row, col) as usize] = h.read_key(row, col);
             }
         }
 

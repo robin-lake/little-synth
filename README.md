@@ -75,7 +75,7 @@ little-synth/
   ```bash
   cargo install cargo-binutils
   ```
-- To flash: [teensy_loader_cli](https://github.com/PaulStoffregen/teensy_loader_cli) or the Teensy Loader GUI.
+- **teensy_loader_cli** for flashing: [https://github.com/PaulStoffregen/teensy_loader_cli](https://github.com/PaulStoffregen/teensy_loader_cli). Install it and ensure `teensy_loader_cli` is on your PATH. Alternatively you can use the Teensy Loader GUI.
 
 ## Build and test
 

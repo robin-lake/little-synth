@@ -1,3 +1,6 @@
 [workspace]
 resolver = "2"
 members = ["crates/synth", "crates/controller", "crates/firmware"]
+
+[profile.release]
+panic = "abort"
