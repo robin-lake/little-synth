@@ -15,11 +15,10 @@ pub const BLOCK_SIZE: usize = 128;
 /// Board resources type (Teensy 4.1).
 pub type BoardResources = board::T41Resources;
 
-/// Initialize board and return peripherals needed for I2S output.
-/// Actual SAI/I2S driver setup will use imxrt-hal (via BSP) when we add the driver.
-pub fn init_audio() -> BoardResources {
-    board::t41(board::instances())
-}
+/// Initialize audio hardware.
+/// Board resources are owned by main; this is a stub until Task 1 wires up the SAI/I2S driver.
+/// TODO Task 1: accept the SAI peripheral from BoardResources and configure I2S output.
+pub fn init_audio() {}
 
 /// Fill a stereo block for the DAC. Left and right are interleaved in I2S order.
 /// Implementations should call the synth engine to fill `left` and `right`.

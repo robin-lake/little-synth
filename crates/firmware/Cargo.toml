@@ -10,6 +10,9 @@ little-synth-controller = { path = "../controller", features = ["brkbx"] }
 teensy4-bsp = { version = "0.5", features = ["rt"] }
 cortex-m = "0.7"
 cortex-m-rt = "0.7"
+imxrt-log = { version = "0.1", features = ["log", "usbd"] }
+log = { version = "0.4", default-features = false }
+teensy4-panic = { version = "0.2", features = ["log"] }
 # imxrt-hal is re-exported by teensy4-bsp for SAI/I2S when we add it
 
 [build-dependencies]

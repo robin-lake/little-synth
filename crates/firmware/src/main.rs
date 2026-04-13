@@ -11,19 +11,26 @@ use little_synth_firmware::{
 };
 // embedded_hal traits are used by SimpleAudioSystem generics
 use teensy4_bsp as bsp;
+use teensy4_panic as _;
 
-#[panic_handler]
-fn panic(_: &core::panic::PanicInfo) -> ! {
-    loop {
-        cortex_m::asm::bkpt();
-    }
-}
+use little_synth_firmware::{audio, display::DummyDisplay};
+use teensy4_bsp::board;
 
 #[cortex_m_rt::entry]
 fn main() -> ! {
     let mut board = audio::init_audio();
+    let resources = board::t41(board::instances());
 
-    // Display: use DummyDisplay until a real screen driver is added
+    // USB serial logging via imxrt-log. Appears as /dev/ttyACM0 on the host.
+    // Using polling mode (Interrupts::Disabled); poller.poll() is called each loop iteration.
+    // Switch to Interrupts::Enabled + unmask USB_OTG1 interrupt for lower-latency output.
+    let mut poller = imxrt_log::log::usbd(resources.usb, imxrt_log::Interrupts::Disabled)
+        .expect("USB logger init failed");
+
+    log::set_max_level(log::LevelFilter::Debug);
+    log::info!("little-synth booting");
+
+    audio::init_audio();
     let _screen = DummyDisplay::new(320, 240);
 
     // Create debug LED pin (built-in LED on Teensy 4.1)
@@ -72,5 +79,7 @@ fn main() -> ! {
         // Simulate audio sample rate timing
         // 128 samples at 48kHz = ~2.67ms per block
         cortex_m::asm::delay(2_670 * 600); // Roughly 2.67ms at 600MHz
+        poller.poll();
+        // cortex_m::asm::wfe();
     }
 }

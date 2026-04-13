@@ -1,0 +1,23 @@
+Complete Pinout (PCM5122 → Teensy 4.1)
+
+  Power:
+  - VIN → Teensy 3.3V
+  - GND → Teensy GND
+
+  I2C Control:
+  - SDA → Pin 18 (SDA)
+  - SCL → Pin 19 (SCL)
+
+  I2S Audio:
+  - BCK → Pin 21 (BCLK)
+  - DIN → Pin 7 (OUT1A)
+  - MCK → Pin 23 (MCLK)
+
+  Digital Control Pins:
+  - MUTE → Pin 2
+  - DEEM → Pin 3
+  - FILT → Pin 4
+  - ATT0 → Pin 5
+  - MOD1 → Pin 6
+  - MOD2 → Pin 8
+  - AGN → Pin 9
