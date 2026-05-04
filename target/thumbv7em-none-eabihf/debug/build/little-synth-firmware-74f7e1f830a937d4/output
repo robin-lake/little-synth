@@ -1,0 +1,3 @@
+cargo:rustc-link-search=/Users/robinlake/code/little-synth/target/thumbv7em-none-eabihf/debug/build/little-synth-firmware-74f7e1f830a937d4/out
+cargo:rerun-if-env-changed=TEENSY4_STACK_SIZE
+cargo:rerun-if-env-changed=TEENSY4_HEAP_SIZE

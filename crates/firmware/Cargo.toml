@@ -8,11 +8,13 @@ description = "Teensy 4.1 firmware for little-synth: I2S DAC, MIDI UART, display
 little-synth = { path = "../synth" }
 little-synth-controller = { path = "../controller", features = ["brkbx"] }
 teensy4-bsp = { version = "0.5", features = ["rt"] }
+imxrt-ral = { version = "0.5", features = ["imxrt1062"] }
 cortex-m = "0.7"
 cortex-m-rt = "0.7"
 imxrt-log = { version = "0.1", features = ["log", "usbd"] }
 log = { version = "0.4", default-features = false }
 teensy4-panic = { version = "0.2", features = ["log"] }
+embedded-hal = "0.2"
 # imxrt-hal is re-exported by teensy4-bsp for SAI/I2S when we add it
 
 [build-dependencies]

@@ -340,6 +340,8 @@ dependencies = [
  "cortex-m",
  "cortex-m-rt",
  "imxrt-log",
+ "embedded-hal 0.2.7",
+ "imxrt-ral",
  "imxrt-rt",
  "little-synth",
  "little-synth-controller",
