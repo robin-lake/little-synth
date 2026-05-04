@@ -3,24 +3,53 @@
 #![no_std]
 #![no_main]
 
+use core::cell::RefCell;
+
+use cortex_m::interrupt::Mutex;
+use cortex_m::peripheral::NVIC;
+use imxrt_ral::Interrupt;
+
 use little_synth_firmware::{
     audio, display::DummyDisplay, sai_simple::SimpleSai, simple_audio::SimpleAudioSystem,
 };
-// embedded_hal traits are used by SimpleAudioSystem generics
 use teensy4_bsp as bsp;
+use teensy4_bsp::interrupt;
 use teensy4_panic as _;
 
 use teensy4_bsp::board;
+
+/// imxrt-log Poller must be driven from `poll()`; Teensy USB does not reliably enumerate when
+/// interrupts are disabled — see teensy4-bsp `rtic_defmt_usb_log` ("need USB interrupts").
+static USB_POLLER: Mutex<RefCell<Option<imxrt_log::Poller>>> =
+    Mutex::new(RefCell::new(None));
+
+#[cortex_m_rt::interrupt]
+fn USB_OTG1() {
+    cortex_m::interrupt::free(|cs| {
+        if let Some(p) = USB_POLLER.borrow(cs).borrow_mut().as_mut() {
+            p.poll();
+        }
+    });
+}
 
 #[cortex_m_rt::entry]
 fn main() -> ! {
     let mut board_resources = board::t41(board::instances());
 
-    // USB serial logging via imxrt-log. Appears as /dev/ttyACM0 on the host.
-    // Using polling mode (Interrupts::Disabled); poller.poll() is called each loop iteration.
-    // Switch to Interrupts::Enabled + unmask USB_OTG1 interrupt for lower-latency output.
-    let mut poller = imxrt_log::log::usbd(board_resources.usb, imxrt_log::Interrupts::Disabled)
+    // USB CDC logging (imxrt-log). Build with full-speed USB — see workspace `.cargo/config.toml`
+    // (`IMXRT_LOG_USB_SPEED=FULL`, bulk MPS 64). Product string on host: "imxrt-log".
+    let poller = imxrt_log::log::usbd(board_resources.usb, imxrt_log::Interrupts::Enabled)
         .expect("USB logger init failed");
+
+    cortex_m::interrupt::free(|cs| {
+        *USB_POLLER.borrow(cs).borrow_mut() = Some(poller);
+    });
+
+    // Allow ISR to service attach/enumeration (polling-only mode is insufficient on this chip).
+    unsafe {
+        NVIC::unmask(Interrupt::USB_OTG1);
+    }
+    NVIC::pend(Interrupt::USB_OTG1);
 
     log::set_max_level(log::LevelFilter::Debug);
     log::info!("little-synth booting");
@@ -28,53 +57,36 @@ fn main() -> ! {
     audio::init_audio();
     let _screen = DummyDisplay::new(320, 240);
 
-    // Create debug LED pin (built-in LED on Teensy 4.1)
     let debug_pin = bsp::board::led(&mut board_resources.gpio2, board_resources.pins.p13);
 
-    // Initialize SAI peripheral
     let sai = match SimpleSai::new() {
         Ok(sai) => sai,
-        Err(_) => {
-            // Failed to initialize SAI
-            loop {
-                cortex_m::asm::bkpt();
-            }
-        }
+        Err(_) => loop {
+            cortex_m::asm::bkpt();
+        },
     };
 
-    // Create simplified audio system
     let mut audio_system = SimpleAudioSystem::new(debug_pin, sai);
 
-    // Initialize audio system
-    if let Err(_) = audio_system.init() {
-        // Failed to initialize audio
+    if audio_system.init().is_err() {
         loop {
             cortex_m::asm::bkpt();
         }
     }
 
-    // Start audio system
-    if let Err(_) = audio_system.start() {
-        // Failed to start audio
+    if audio_system.start().is_err() {
         loop {
             cortex_m::asm::bkpt();
         }
     }
 
-    // Main audio loop - generate 440Hz A4 note
-    let frequency = 440.0; // A4
+    let frequency = 440.0_f32;
 
     loop {
-        // Process audio block (generates samples and toggles LED)
-        if let Err(_) = audio_system.process_audio_block(frequency) {
-            // Audio processing failed
+        if audio_system.process_audio_block(frequency).is_err() {
             cortex_m::asm::bkpt();
         }
 
-        // Simulate audio sample rate timing
-        // 128 samples at 48kHz = ~2.67ms per block
-        cortex_m::asm::delay(2_670 * 600); // Roughly 2.67ms at 600MHz
-        poller.poll();
-        // cortex_m::asm::wfe();
+        cortex_m::asm::delay(2_670 * 600);
     }
 }

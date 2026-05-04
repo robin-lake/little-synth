@@ -2,3 +2,9 @@
 # So we must set the Teensy linker script here for the firmware target.
 [target.thumbv7em-none-eabihf]
 rustflags = ["-C", "link-arg=-Tt4link.x"]
+
+# imxrt-log defaults to high-speed USB; Teensy 4.x USB logging examples use full-speed CDC.
+# Without full-speed + bulk MPS≤64, hosts often never see a serial device (imxrt-log build.rs rules).
+[env]
+IMXRT_LOG_USB_SPEED = "FULL"
+IMXRT_LOG_USB_BULK_MPS = "64"

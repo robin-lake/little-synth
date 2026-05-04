@@ -1,5 +1,11 @@
-   0.146896000s  INFO prepare_target{force=false package_id=little-synth-firmware v0.1.0 (/Users/robinlake/code/little-synth/crates/firmware) target="little-synth-firmware"}: cargo::core::compiler::fingerprint: fingerprint error for little-synth-firmware v0.1.0 (/Users/robinlake/code/little-synth/crates/firmware)/Check { test: false }/TargetInner { name: "little-synth-firmware", doc: true, ..: with_path("/Users/robinlake/code/little-synth/crates/firmware/src/main.rs", Edition2021) }
-   0.147122709s  INFO prepare_target{force=false package_id=little-synth-firmware v0.1.0 (/Users/robinlake/code/little-synth/crates/firmware) target="little-synth-firmware"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/robinlake/code/little-synth/target/debug/.fingerprint/little-synth-firmware-157207e6fa00716c/bin-little-synth-firmware`
+   0.034222917s  INFO prepare_target{force=false package_id=little-synth v0.1.0 (/Users/robinlake/code/little-synth/crates/synth) target="envelope"}: cargo::core::compiler::fingerprint: dependency on `libm` is newer than we are 1777854813.843147752s > 1777854813.375552440s "/Users/robinlake/code/little-synth/crates/synth"
+   0.034784500s  INFO prepare_target{force=false package_id=little-synth v0.1.0 (/Users/robinlake/code/little-synth/crates/synth) target="envelope"}: cargo::core::compiler::fingerprint: fingerprint dirty for little-synth v0.1.0 (/Users/robinlake/code/little-synth/crates/synth)/Check { test: true }/TargetInner { kind: "test", name: "envelope", benched: false, ..: with_path("/Users/robinlake/code/little-synth/crates/synth/tests/envelope.rs", Edition2021) }
+   0.035056458s  INFO prepare_target{force=false package_id=little-synth v0.1.0 (/Users/robinlake/code/little-synth/crates/synth) target="envelope"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleDependency { unit: UnitIndex(54), dep_mtime: FileTime { seconds: 1777854813, nanos: 843147752 }, max_mtime: FileTime { seconds: 1777854813, nanos: 375552440 } })
+   0.035767292s  INFO prepare_target{force=false package_id=little-synth v0.1.0 (/Users/robinlake/code/little-synth/crates/synth) target="lfo"}: cargo::core::compiler::fingerprint: dependency on `libm` is newer than we are 1777854813.843147752s > 1777854813.836302172s "/Users/robinlake/code/little-synth/crates/synth"
+   0.035856542s  INFO prepare_target{force=false package_id=little-synth v0.1.0 (/Users/robinlake/code/little-synth/crates/synth) target="lfo"}: cargo::core::compiler::fingerprint: fingerprint dirty for little-synth v0.1.0 (/Users/robinlake/code/little-synth/crates/synth)/Check { test: true }/TargetInner { kind: "test", name: "lfo", benched: false, ..: with_path("/Users/robinlake/code/little-synth/crates/synth/tests/lfo.rs", Edition2021) }
+   0.035862000s  INFO prepare_target{force=false package_id=little-synth v0.1.0 (/Users/robinlake/code/little-synth/crates/synth) target="lfo"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleDependency { unit: UnitIndex(54), dep_mtime: FileTime { seconds: 1777854813, nanos: 843147752 }, max_mtime: FileTime { seconds: 1777854813, nanos: 836302172 } })
+   0.048131958s  INFO prepare_target{force=false package_id=little-synth-firmware v0.1.0 (/Users/robinlake/code/little-synth/crates/firmware) target="little-synth-firmware"}: cargo::core::compiler::fingerprint: fingerprint error for little-synth-firmware v0.1.0 (/Users/robinlake/code/little-synth/crates/firmware)/Check { test: false }/TargetInner { name: "little-synth-firmware", doc: true, ..: with_path("/Users/robinlake/code/little-synth/crates/firmware/src/main.rs", Edition2021) }
+   0.048147167s  INFO prepare_target{force=false package_id=little-synth-firmware v0.1.0 (/Users/robinlake/code/little-synth/crates/firmware) target="little-synth-firmware"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/robinlake/code/little-synth/target/debug/.fingerprint/little-synth-firmware-157207e6fa00716c/bin-little-synth-firmware`
 
 Caused by:
     No such file or directory (os error 2)
@@ -22,8 +28,8 @@ Stack backtrace:
   14: std::rt::lang_start::<()>::{closure#0}
   15: std::rt::lang_start_internal
   16: _main
-   0.161799834s  INFO prepare_target{force=false package_id=little-synth-firmware v0.1.0 (/Users/robinlake/code/little-synth/crates/firmware) target="little-synth-firmware"}: cargo::core::compiler::fingerprint: fingerprint error for little-synth-firmware v0.1.0 (/Users/robinlake/code/little-synth/crates/firmware)/Check { test: true }/TargetInner { name: "little-synth-firmware", doc: true, ..: with_path("/Users/robinlake/code/little-synth/crates/firmware/src/main.rs", Edition2021) }
-   0.161814459s  INFO prepare_target{force=false package_id=little-synth-firmware v0.1.0 (/Users/robinlake/code/little-synth/crates/firmware) target="little-synth-firmware"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/robinlake/code/little-synth/target/debug/.fingerprint/little-synth-firmware-a052b097e6c68a5a/test-bin-little-synth-firmware`
+   0.063177417s  INFO prepare_target{force=false package_id=little-synth-firmware v0.1.0 (/Users/robinlake/code/little-synth/crates/firmware) target="little-synth-firmware"}: cargo::core::compiler::fingerprint: fingerprint error for little-synth-firmware v0.1.0 (/Users/robinlake/code/little-synth/crates/firmware)/Check { test: true }/TargetInner { name: "little-synth-firmware", doc: true, ..: with_path("/Users/robinlake/code/little-synth/crates/firmware/src/main.rs", Edition2021) }
+   0.063191875s  INFO prepare_target{force=false package_id=little-synth-firmware v0.1.0 (/Users/robinlake/code/little-synth/crates/firmware) target="little-synth-firmware"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/robinlake/code/little-synth/target/debug/.fingerprint/little-synth-firmware-a052b097e6c68a5a/test-bin-little-synth-firmware`
 
 Caused by:
     No such file or directory (os error 2)
@@ -46,7 +52,8 @@ Stack backtrace:
   14: std::rt::lang_start::<()>::{closure#0}
   15: std::rt::lang_start_internal
   16: _main
+    Checking little-synth v0.1.0 (/Users/robinlake/code/little-synth/crates/synth)
     Checking little-synth-firmware v0.1.0 (/Users/robinlake/code/little-synth/crates/firmware)
-error: could not compile `little-synth-firmware` (bin "little-synth-firmware" test) due to 3 previous errors
+error: could not compile `little-synth-firmware` (bin "little-synth-firmware" test) due to 1 previous error
 warning: build failed, waiting for other jobs to finish...
-error: could not compile `little-synth-firmware` (bin "little-synth-firmware") due to 5 previous errors
+error: could not compile `little-synth-firmware` (bin "little-synth-firmware") due to 1 previous error

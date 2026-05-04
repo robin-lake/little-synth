@@ -89,8 +89,12 @@ rustup target add thumbv7em-none-eabihf
 # Build firmware (release) for Teensy 4.1
 cargo build -p little-synth-firmware --release --target thumbv7em-none-eabihf
 
-# Produce Intel HEX for Teensy Loader (requires cargo-binutils)
-cargo objcopy -p little-synth-firmware --release --target thumbv7em-none-eabihf -- -O ihex little-synth-firmware.hex
+# Produce Intel HEX for Teensy Loader (requires cargo-binutils).
+# Restrict to flash sections only — dumping all segments includes OCRAM VMAs (0x2020xxxx), which
+# teensy_loader_cli cannot parse. Prefer `make hex` from the repo Makefile.
+cargo objcopy -p little-synth-firmware --release --target thumbv7em-none-eabihf -- \
+  -j .boot -j .vector_table -j .text -j .rodata -j .data \
+  -O ihex little-synth-firmware.hex
 ```
 
 Then load `little-synth-firmware.hex` onto the Teensy 4.1 with Teensy Loader or:
