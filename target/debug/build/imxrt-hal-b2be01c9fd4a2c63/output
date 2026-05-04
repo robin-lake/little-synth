@@ -1,4 +1,4 @@
-cargo:rustc-check-cfg=cfg(chip, values("imxrt1160", "imxrt1050", "imxrt1170", "imxrt1060", "imxrt1020", "imxrt1015", "imxrt1010", "imxrt1064"))
+cargo:rustc-check-cfg=cfg(chip, values("imxrt1170", "imxrt1020", "imxrt1015", "imxrt1050", "imxrt1060", "imxrt1160", "imxrt1010", "imxrt1064"))
 cargo:rustc-check-cfg=cfg(family, values("none", "imxrt10xx", "imxrt11xx"))
 cargo:rustc-cfg=family="imxrt10xx"
 cargo:rustc-cfg=chip="imxrt1060"

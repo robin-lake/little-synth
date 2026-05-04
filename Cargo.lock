@@ -339,8 +339,8 @@ version = "0.1.0"
 dependencies = [
  "cortex-m",
  "cortex-m-rt",
- "imxrt-log",
  "embedded-hal 0.2.7",
+ "imxrt-log",
  "imxrt-ral",
  "imxrt-rt",
  "little-synth",
