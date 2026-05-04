@@ -6,3 +6,5 @@ pub mod audio;
 pub mod brkbx_teensy41;
 pub mod display;
 pub mod midi_uart;
+pub mod simple_audio;
+pub mod sai_simple;

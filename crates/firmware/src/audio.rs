@@ -1,8 +1,8 @@
-//! Audio output to PCM5102 via I2S/SAI. Teensy 4.1 SAI pins and clock setup.
+//! Audio output to PCM5122 via I2S/SAI. Teensy 4.1 SAI pins and clock setup.
 //!
-//! PCM5102 expects I2S: BCK, LRCK (WS), DIN (data). No MCLK required for PCM5102.
-//! Teensy 4.1 I2S2 pins (from PJRC/teensy4-rs docs):
-//!   - BCLK: 4, LRCK: 3, DIN (TX): 2 (DOUT from Teensy perspective = data to DAC).
+//! PCM5122 expects I2S: BCK, LRCK (WS), DIN (data). MCLK optional but recommended.
+//! Teensy 4.1 I2S pins for PCM5122:
+//!   - BCLK: 21, LRCK: 23, DIN: 7 (data to DAC).
 
 use teensy4_bsp::board;
 
